@@ -4,25 +4,14 @@ const db = config.get('MongoURI')
 
 const connectDB = async () => {
   try {
-    // Do NOT await here → prevents Express from hanging
-    mongoose.connect(db, {
-      // optional (not needed in latest drivers but safe)
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    })
-
-    console.log('MongoDB Connection Attempt Started...')
-
-    // Event listeners for clarity
-    mongoose.connection.on('connected', () => {
-      console.log('✅ MongoDB Connected')
-    })
-
-    mongoose.connection.on('error', (err) => {
-      console.error(`❌ MongoDB connection error: ${err.message}`)
-    })
+    // Use await to ensure the connection is established or fails here
+    // The old options are no longer needed with modern Mongoose
+    await mongoose.connect(db)
+    console.log('MongoDB Connected...')
   } catch (err) {
-    console.error(err.message)
+    // This will now correctly catch any initial connection error
+    console.error('Database connection failed:', err.message)
+    // Exit process with failure
     process.exit(1)
   }
 }
