@@ -1,9 +1,9 @@
 const express = require('express')
 const router = express.Router()
 
-router.post('/', (req, res) => {
-  console.log(req.body)
-  res.send('Profile route working')
+router.get('/', (req, res) => {
+	console.log(req.body)
+	res.send('Profile route working')
 })
 
 module.exports = router
