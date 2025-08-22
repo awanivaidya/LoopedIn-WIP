@@ -2,7 +2,7 @@ const express = require('express')
 const router = express.Router()
 const { check, validationResult } = require('express-validator')
 
-//@desc Register Users
+///@desc Register Users
 router.post(
 	'/',
 	[
