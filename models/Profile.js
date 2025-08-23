@@ -66,7 +66,7 @@ const ProfileSchema = new mongoose.Schema({
 			},
 
 			description: {
-				type: Date,
+				type: String,
 				required: true,
 			},
 		},
