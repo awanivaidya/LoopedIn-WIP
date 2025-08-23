@@ -78,13 +78,12 @@ const ProfileSchema = new mongoose.Schema({
 				type: String,
 				required: true,
 			},
-			cdegree: {
+			degree: {
 				type: String,
 				required: true,
 			},
 			fieldofstudy: {
 				type: String,
-				required: true,
 			},
 			from: {
 				type: Date,
@@ -101,7 +100,7 @@ const ProfileSchema = new mongoose.Schema({
 			},
 
 			description: {
-				type: Date,
+				type: String,
 				required: true,
 			},
 		},
