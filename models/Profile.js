@@ -18,8 +18,8 @@ const ProfileSchema = new mongoose.Schema({
 	},
 
 	description: {
-		type: Date,
-		required: true,
+		type: String,
+		//required: true,
 	},
 
 	status: {
