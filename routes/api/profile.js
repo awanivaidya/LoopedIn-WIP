@@ -200,6 +200,13 @@ router.put(
 
 		try {
 			const profile = await Profile.findOne({ user: req.user.id })
+
+			if (!profile) {
+				return res
+					.status(400)
+					.json({ msg: 'Profile not found. Please create a profile first.' })
+			}
+
 			profile.experience.unshift(newExp)
 
 			await profile.save()
@@ -270,6 +277,13 @@ router.put(
 
 		try {
 			const profile = await Profile.findOne({ user: req.user.id })
+
+			if (!profile) {
+				return res
+					.status(400)
+					.json({ msg: 'Profile not found. Please create a profile first.' })
+			}
+
 			profile.education.unshift(newExp)
 
 			await profile.save()

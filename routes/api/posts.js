@@ -37,10 +37,10 @@ router.post(
 
 // @route   GET api/posts
 // @desc    Get all posts
-// @access  Public
-router.get('/', async (req, res) => {
+// @access  Private
+router.get('/', auth, async (req, res) => {
 	try {
-		const posts = await Post.find().sort({ date: -1 })
+		const posts = await Post.find().sort({ date: -1 }) //most recent
 		res.json(posts)
 	} catch (err) {
 		console.error(err.message)
@@ -48,24 +48,54 @@ router.get('/', async (req, res) => {
 	}
 })
 
-// @route   GET api/posts/user/:user_id
+// @route   GET api/posts/user/:id
 // @desc    Get all posts by a specific user
-// @access  Public
-router.get('/user/:user_id', async (req, res) => {
+// @access  Private
+router.get('/user/:id', auth, async (req, res) => {
 	try {
-		const posts = await Post.find({ user: req.params.user_id }).sort({
-			date: -1,
-		})
-		if (!posts.length)
+		const posts = await Post.find({ user: req.params.id })
+
+		if (!posts)
 			return res.status(404).json({ msg: 'No posts found for this user' })
+
 		res.json(posts)
 	} catch (err) {
 		console.error(err.message)
+		if (err.kind === 'ObjectId') {
+			return res.status(404).json({ msg: 'No posts found for this user' })
+		}
 		res.status(500).send('Server Error')
 	}
 })
 
-// have to do delete
+// @route   DELETE api/posts/:id
+// @desc    Delete a post by its _id
+// @access  Private
+router.delete('/:id', auth, async (req, res) => {
+	try {
+		// Use findById correctly
+		const post = await Post.findById(req.params.id)
+
+		if (!post) {
+			return res.status(404).json({ msg: 'Post not found' })
+		}
+
+		// Ensure the logged-in user owns the post
+		if (post.user.toString() !== req.user.id) {
+			return res.status(401).json({ msg: 'User not authorized' })
+		}
+
+		await post.deleteOne()
+
+		res.json({ msg: 'Post removed' })
+	} catch (err) {
+		console.error(err.message)
+		if (err.kind === 'ObjectId') {
+			return res.status(404).json({ msg: 'Post not found' })
+		}
+		res.status(500).send('Server Error')
+	}
+})
 
 // @route   PUT api/posts/like/:id
 // @desc    Like a post
@@ -73,12 +103,14 @@ router.get('/user/:user_id', async (req, res) => {
 router.put('/like/:id', auth, async (req, res) => {
 	try {
 		const post = await Post.findById(req.params.id)
-
 		if (!post) return res.status(404).json({ msg: 'Post not found' })
 
-		if (post.likes.some((like) => like.user.toString() === req.user.id))
+		if (
+			post.likes.filter((like) => like.user.toString() === req.user.id).length >
+			0
+		) {
 			return res.status(400).json({ msg: 'Post already liked' })
-
+		}
 		post.likes.unshift({ user: req.user.id })
 		await post.save()
 		res.json(post.likes)
@@ -87,7 +119,6 @@ router.put('/like/:id', auth, async (req, res) => {
 		res.status(500).send('Server Error')
 	}
 })
-
 // @route   PUT api/posts/unlike/:id
 // @desc    Unlike a post
 // @access  Private
@@ -96,21 +127,25 @@ router.put('/unlike/:id', auth, async (req, res) => {
 		const post = await Post.findById(req.params.id)
 		if (!post) return res.status(404).json({ msg: 'Post not found' })
 
-		const removeIndex = post.likes.findIndex(
-			(like) => like.user.toString() === req.user.id
-		)
-		if (removeIndex === -1)
-			return res.status(400).json({ msg: 'Post has not yet been liked' })
-
+		if (
+			post.likes.filter((like) => like.user.toString() === req.user.id)
+				.length === 0
+		) {
+			return res.status(400).json({ msg: "Post can't be unliked!" })
+		}
+		const removeIndex = post.likes
+			.map((like) => like.user.toString())
+			.indexOf(req.user.id)
 		post.likes.splice(removeIndex, 1)
+
 		await post.save()
+
 		res.json(post.likes)
 	} catch (err) {
 		console.error(err.message)
 		res.status(500).send('Server Error')
 	}
 })
-
 // @route   POST api/posts/comment/:id
 // @desc    Add a comment to a post
 // @access  Private
