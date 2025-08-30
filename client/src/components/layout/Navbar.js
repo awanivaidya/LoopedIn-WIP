@@ -1,26 +1,81 @@
-import React from 'react'
+import React, { Fragment } from 'react'
 import { Link } from 'react-router-dom'
-const Navbar = () => {
-	return (
-		<nav className='navbar bg-dark'>
-			<h1>
-				<Link to='/'>
-					<i className='fas fa-code'></i> LoopedIn
+import { connect } from 'react-redux'
+import PropTypes from 'prop-types'
+import { logout } from '../../actions/auth'
+
+const Navbar = ({ auth: { isAuthenticated, loading }, logout }) => {
+	const authLinks = (
+		<ul>
+			<div className='actions'>
+				<Link
+					to='/dashboard'
+					className='nav-link'>
+					<i className='fas fa-user-alt' />
+					Dashboard
 				</Link>
-			</h1>
-			<ul>
-				<li>
-					<a href='!#'>Developers</a>
-				</li>
-				<li>
-					<Link to='/register'>Register</Link>
-				</li>
-				<li>
-					<Link to='/login'>Login</Link>
-				</li>
-			</ul>
+				<a
+					href='#!'
+					onClick={logout}
+					className='btn btn-square btn-outline-purple'>
+					<i className='fas fa-sign-out-alt' /> Logout
+				</a>
+			</div>
+		</ul>
+	)
+
+	const guestLinks = (
+		<ul>
+			<div className='actions'>
+				<a
+					href='#!'
+					className='nav-link'>
+					Developers
+				</a>
+				<Link
+					to='/register'
+					className='btn btn-square btn-outline-purple'>
+					Sign Up
+				</Link>
+				<Link
+					to='/login'
+					className='btn btn-square btn-outline-purple'>
+					Login
+				</Link>
+			</div>
+		</ul>
+	)
+
+	return (
+		<nav className='navbar'>
+			<div className='container'>
+				{/* Left side: Logo (keeps glowing pill) */}
+				<div className='nav-left'>
+					<h1>
+						<Link
+							to='/'
+							className='logo gradient-frame'>
+							<i className='fas fa-code' /> LoopedIn
+						</Link>
+					</h1>
+				</div>
+
+				{/* Right side: Conditional links */}
+				{!loading && (
+					<Fragment>{isAuthenticated ? authLinks : guestLinks}</Fragment>
+				)}
+			</div>
 		</nav>
 	)
 }
 
-export default Navbar
+Navbar.propTypes = {
+	logout: PropTypes.func.isRequired,
+	auth: PropTypes.object.isRequired,
+}
+
+const mapStateToProps = (state) => ({
+	auth: state.auth,
+})
+
+export default connect(mapStateToProps, { logout })(Navbar)
