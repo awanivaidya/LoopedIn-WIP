@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { setAlert } from './alert'
-import { GET_PROFILE, PROFILE_ERROR } from './types'
+import { GET_PROFILE, PROFILE_ERROR, UPDATE_PROFILE } from './types'
 
 // Get current user's profile
 export const getCurrentProfile = () => async (dispatch) => {
@@ -44,7 +44,7 @@ export const createProfile =
 				setAlert(edit ? 'Profile updated' : 'Profile created', 'success')
 			)
 
-			navigate('/dashboard')
+			navigate('/dashboard') // ✅ redirect after profile save
 		} catch (err) {
 			const errors = err?.response?.data?.errors
 			if (Array.isArray(errors)) {
@@ -60,3 +60,73 @@ export const createProfile =
 			})
 		}
 	}
+
+// Add experience
+export const addExperience = (formData, navigate) => async (dispatch) => {
+	try {
+		const config = {
+			headers: {
+				'Content-Type': 'application/json',
+			},
+		}
+
+		const res = await axios.put('/api/profile/experience', formData, config)
+
+		dispatch({
+			type: UPDATE_PROFILE,
+			payload: res.data,
+		})
+
+		dispatch(setAlert('Experience added', 'success'))
+
+		navigate('/dashboard') // ✅ redirect after success
+	} catch (err) {
+		const errors = err?.response?.data?.errors
+		if (Array.isArray(errors)) {
+			errors.forEach((e) => e?.msg && dispatch(setAlert(e.msg, 'danger')))
+		}
+
+		dispatch({
+			type: PROFILE_ERROR,
+			payload: {
+				msg: err.response?.statusText || err.message,
+				status: err.response?.status || 500,
+			},
+		})
+	}
+}
+
+// Add education
+export const addEducation = (formData, navigate) => async (dispatch) => {
+	try {
+		const config = {
+			headers: {
+				'Content-Type': 'application/json',
+			},
+		}
+
+		const res = await axios.put('/api/profile/education', formData, config)
+
+		dispatch({
+			type: UPDATE_PROFILE,
+			payload: res.data,
+		})
+
+		dispatch(setAlert('Education added', 'success'))
+
+		navigate('/dashboard') // ✅ redirect after success
+	} catch (err) {
+		const errors = err?.response?.data?.errors
+		if (Array.isArray(errors)) {
+			errors.forEach((e) => e?.msg && dispatch(setAlert(e.msg, 'danger')))
+		}
+
+		dispatch({
+			type: PROFILE_ERROR,
+			payload: {
+				msg: err.response?.statusText || err.message,
+				status: err.response?.status || 500,
+			},
+		})
+	}
+}
