@@ -222,7 +222,7 @@ router.put(
 // @desc	Remove a profile experience
 //@access	Private
 
-router.delete('/experience/ :exp_id', auth, async (req, res) => {
+router.delete('/experience/:exp_id', auth, async (req, res) => {
 	try {
 		const profile = await Profile.findOne({ user: req.user.id })
 
