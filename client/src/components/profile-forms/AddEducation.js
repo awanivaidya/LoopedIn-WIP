@@ -5,7 +5,7 @@ import { connect } from 'react-redux'
 import { addEducation } from '../../actions/profile'
 
 const AddEducation = ({ addEducation }) => {
-	const navigate = useNavigate() // ✅ only call hook inside component body
+	const navigate = useNavigate()
 
 	const [formData, setFormData] = useState({
 		school: '',
@@ -32,7 +32,7 @@ const AddEducation = ({ addEducation }) => {
 
 	const onSubmit = (e) => {
 		e.preventDefault()
-		addEducation(formData, navigate) // ✅ pass navigate to action
+		addEducation(formData, navigate)
 	}
 
 	return (

@@ -6,6 +6,8 @@ import {
 	UPDATE_PROFILE,
 	DELETE_ACCOUNT,
 	CLEAR_PROFILE,
+	GET_PROFILES,
+	GET_REPOS,
 } from './types'
 
 // Get current user's profile
@@ -15,6 +17,71 @@ export const getCurrentProfile = () => async (dispatch) => {
 
 		dispatch({
 			type: GET_PROFILE,
+			payload: res.data,
+		})
+	} catch (err) {
+		dispatch({
+			type: PROFILE_ERROR,
+			payload: {
+				msg: err.response?.statusText || err.message,
+				status: err.response?.status || 500,
+			},
+		})
+	}
+}
+
+// get all profiles
+
+export const getProfiles = () => async (dispatch) => {
+	dispatch({
+		type: CLEAR_PROFILE,
+	})
+
+	try {
+		const res = await axios.get('/api/profile')
+
+		dispatch({
+			type: GET_PROFILES,
+			payload: res.data,
+		})
+	} catch (err) {
+		dispatch({
+			type: PROFILE_ERROR,
+			payload: {
+				msg: err.response?.statusText || err.message,
+				status: err.response?.status || 500,
+			},
+		})
+	}
+}
+
+// get profile by user id
+export const getProfileByID = (userID) => async (dispatch) => {
+	try {
+		const res = await axios.get(`/api/profile/user/${userID}`)
+
+		dispatch({
+			type: GET_PROFILE,
+			payload: res.data,
+		})
+	} catch (err) {
+		dispatch({
+			type: PROFILE_ERROR,
+			payload: {
+				msg: err.response?.statusText || err.message,
+				status: err.response?.status || 500,
+			},
+		})
+	}
+}
+
+// get github repos
+export const getGithubRepos = (username) => async (dispatch) => {
+	try {
+		const res = await axios.get(`/api/profile/github/${username}`)
+
+		dispatch({
+			type: GET_REPOS,
 			payload: res.data,
 		})
 	} catch (err) {
@@ -50,7 +117,7 @@ export const createProfile =
 				setAlert(edit ? 'Profile updated' : 'Profile created', 'success')
 			)
 
-			navigate('/dashboard') // ✅ redirect after profile save
+			navigate('/dashboard')
 		} catch (err) {
 			const errors = err?.response?.data?.errors
 			if (Array.isArray(errors)) {
@@ -85,7 +152,7 @@ export const addExperience = (formData, navigate) => async (dispatch) => {
 
 		dispatch(setAlert('Experience added', 'success'))
 
-		navigate('/dashboard') // ✅ redirect after success
+		navigate('/dashboard')
 	} catch (err) {
 		const errors = err?.response?.data?.errors
 		if (Array.isArray(errors)) {
@@ -120,7 +187,7 @@ export const addEducation = (formData, navigate) => async (dispatch) => {
 
 		dispatch(setAlert('Education added', 'success'))
 
-		navigate('/dashboard') // ✅ redirect after success
+		navigate('/dashboard')
 	} catch (err) {
 		const errors = err?.response?.data?.errors
 		if (Array.isArray(errors)) {

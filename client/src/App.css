@@ -1027,3 +1027,10 @@ a:focus-visible {
   text-align: center;
 }
 
+.round-img {
+  border-radius: 50%; /* makes it perfectly round */
+  width: 100px;       /* control the size */
+  height: 100px;      /* keep it square so border-radius works */
+  object-fit: cover;  /* crop nicely instead of stretching */
+}
+

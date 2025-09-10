@@ -9,6 +9,11 @@ const Navbar = ({ auth: { isAuthenticated, loading }, logout }) => {
 		<ul>
 			<div className='actions'>
 				<Link
+					to='/profiles'
+					className='nav-link'>
+					Developers
+				</Link>
+				<Link
 					to='/dashboard'
 					className='nav-link'>
 					<i className='fas fa-user-alt' />
@@ -27,11 +32,11 @@ const Navbar = ({ auth: { isAuthenticated, loading }, logout }) => {
 	const guestLinks = (
 		<ul>
 			<div className='actions'>
-				<a
-					href='#!'
+				<Link
+					to='/profiles'
 					className='nav-link'>
 					Developers
-				</a>
+				</Link>
 				<Link
 					to='/register'
 					className='btn btn-square btn-outline-purple'>

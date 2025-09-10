@@ -11,7 +11,9 @@ import PublicRoute from './components/routing/PublicRoute'
 import CreateProfile from './components/profile-forms/CreateProfile'
 import EditProfile from './components/profile-forms/EditProfile'
 import AddExperience from './components/profile-forms/AddExperience'
+import Profiles from './components/profiles/Profiles'
 import AddEducation from './components/profile-forms/AddEducation'
+import Profile from './components/profile/Profile'
 // Redux
 import { Provider } from 'react-redux'
 import store from './store'
@@ -20,7 +22,6 @@ import setAuthToken from './utils/setAuthToken'
 
 import './App.css'
 
-// Set auth token for axios if it exists
 if (localStorage.token) {
 	setAuthToken(localStorage.token)
 }
@@ -38,13 +39,20 @@ const App = () => {
 					<Alert />
 				</div>
 				<Routes>
-					{/* Public landing page */}
 					<Route
 						path='/'
 						element={<Landing />}
 					/>
 
-					{/* Auth pages only for guests */}
+					<Route
+						path='/profiles'
+						element={<Profiles />}
+					/>
+					<Route
+						path='/profile/:id'
+						element={<Profile />}
+					/>
+
 					<Route element={<PublicRoute />}>
 						<Route
 							path='/register'
@@ -56,7 +64,6 @@ const App = () => {
 						/>
 					</Route>
 
-					{/* Private routes only for logged-in users */}
 					<Route element={<PrivateRoute />}>
 						<Route
 							path='/dashboard'
