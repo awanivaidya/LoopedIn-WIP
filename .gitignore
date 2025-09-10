@@ -1,8 +1,4 @@
 node_modules/cd
 client/node_modules
-node_modules/
-client/node_modules/
-node_modules/
-client/node_modules/
-node_modules/
-client/node_modules/
+config/default.json
+

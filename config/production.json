@@ -1,0 +1,6 @@
+{
+"MongoURI" : "mongodb+srv://awani123:awani@devsphere.d0kpwwr.mongodb.net/devsphere?retryWrites=true&w=majority&appName=DevSphere",
+"jwtSecret" :"mysecrettoken",
+"githubClientId": "Ov23linp1GVYlz52me57",
+"githubSecret" : "e930a49bdb3a225089541ac18c75f6e9d9695dc0"
+}

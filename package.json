@@ -8,7 +8,8 @@
     "server": "nodemon server",
     "client": "npm start --prefix client",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
-    "proxy" : "https:\\localhost:8080"
+    "proxy" : "https:\\localhost:8080",
+    "heroku-postbuild":"NPM_CONFIG_PRODUCTION=false npm install --prefix client && npm run build --prefix client"
   },
   "author": "awani_",
   "license": "MIT",
