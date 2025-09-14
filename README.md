@@ -1,6 +1,10 @@
 # **LoopedIn**
 
-LoopedIn is a work-in-progress social networking platform for developers. Think of it as a lightweight LinkedIn clone where users can sign up, log in, manage their profile. This is a work in progress and new features will be added as and when possible!
+LoopedIn is a work-in-progress social networking platform for developers. Think of it as a lightweight LinkedIn clone where users can sign up, log in, manage their profile. This is a work in progress and new features will be added as and when possible! 
+
+**Version 1.1 now deployed on Heroku. Sign up!**
+
+https://loopedin-acac3e638b8f.herokuapp.com/register
 
 ## Features
 
